@@ -1,0 +1,3 @@
+@model ItemReport
+@{ ViewData["Title"] = "Delete Report"; }
+<div class="form-shell"><div class="display-6">🗑️</div><h1 class="h3 fw-bold mt-2">Delete this report?</h1><p class="text-secondary">This permanently removes the report and its related claims.</p><div class="alert alert-warning"><strong>@Model.Title</strong><br/>@Model.ReportType · @Model.Location</div><form asp-action="Delete" method="post">@Html.AntiForgeryToken()<input type="hidden" asp-for="Id"/><button class="btn btn-danger">Yes, delete report</button> <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Cancel</a></form></div>

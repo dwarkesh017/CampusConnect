@@ -1,0 +1,5 @@
+@model ClaimRequest
+@{ ViewData["Title"] = "Submit Claim"; var item = (ItemReport)ViewBag.Item; }
+<div class="form-shell"><a asp-controller="Reports" asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none">← Back to item</a><h1 class="h2 fw-bold mt-3">Claim: @item.Title</h1><p class="text-secondary">Explain how you can identify the item. This is sent to the administrator for review.</p>
+<form asp-action="Create" method="post"><input type="hidden" asp-for="ItemReportId"/><div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div><div class="mb-3"><label asp-for="ClaimDescription" class="form-label"></label><textarea asp-for="ClaimDescription" rows="5" class="form-control" placeholder="Describe a distinguishing feature or detail..."></textarea><span asp-validation-for="ClaimDescription" class="text-danger"></span></div><button class="btn btn-primary">Submit claim</button></form></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

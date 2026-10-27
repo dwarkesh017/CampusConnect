@@ -1,0 +1,23 @@
+@model IEnumerable<ItemReport>
+@{ ViewData["Title"] = "Browse Items"; }
+<div class="page-heading"><span class="eyebrow text-primary">CAMPUS COMMUNITY</span><h1 class="h2 fw-bold">Browse lost & found items</h1><p class="text-secondary">Search recent reports and see if someone has found what you're looking for.</p></div>
+<form method="get" class="filter-panel mb-4">
+ <div class="row g-2">
+  <div class="col-lg-4"><input class="form-control" name="search" value="@ViewBag.Search" placeholder="Search item, details, location..." /></div>
+  <div class="col-md-4 col-lg-3"><select class="form-select" name="category"><option value="">All categories</option>@foreach (string c in (IEnumerable<string>)ViewBag.Categories) { <option value="@c" selected="@(ViewBag.Category == c)">@c</option> }</select></div>
+  <div class="col-md-4 col-lg-2"><select class="form-select" name="type"><option value="">Lost & found</option><option value="Lost" selected="@(ViewBag.Type?.ToString() == "Lost")">Lost</option><option value="Found" selected="@(ViewBag.Type?.ToString() == "Found")">Found</option></select></div>
+  <div class="col-md-4 col-lg-3 d-flex gap-2"><button class="btn btn-primary flex-grow-1">Search</button><a class="btn btn-outline-secondary" asp-action="Index">Reset</a></div>
+ </div>
+</form>
+<div class="d-flex justify-content-between mb-3"><span class="text-secondary">@Model.Count() report(s) found</span>@if (User.Identity?.IsAuthenticated == true) { <a asp-action="Create" class="btn btn-sm btn-warning fw-semibold">+ New report</a> }</div>
+<div class="row g-3">
+@foreach (var item in Model) {
+ <div class="col-md-6 col-xl-4"><div class="item-card h-100">
+  <div class="d-flex justify-content-between"><span class="badge @(item.ReportType == ReportType.Lost ? "text-bg-danger" : "text-bg-success")">@item.ReportType</span><span class="status-pill">@item.Status</span></div>
+  <h2 class="h5 fw-bold mt-3">@item.Title</h2><p class="text-secondary small clamp-2">@item.Description</p>
+  <div class="item-meta">🏷️ @item.Category</div><div class="item-meta">📍 @item.Location</div><div class="item-meta">📅 @item.EventDate.ToString("dd MMM yyyy")</div>
+  <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary w-100 mt-3">View report</a>
+ </div></div>
+}
+@if (!Model.Any()) { <div class="col-12"><div class="empty-state"><div class="display-6">🔍</div><h3>No matching reports</h3><p class="text-secondary">Try another keyword or clear your filters.</p></div></div> }
+</div>

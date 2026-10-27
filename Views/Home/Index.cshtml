@@ -1,0 +1,34 @@
+@model IEnumerable<ItemReport>
+@{
+    ViewData["Title"] = "Home";
+}
+<section class="hero rounded-4 p-4 p-md-5 mb-4">
+  <div class="row align-items-center g-4">
+    <div class="col-lg-8">
+      <span class="eyebrow">YOUR CAMPUS. ONE COMMUNITY.</span>
+      <h1 class="display-5 fw-bold mt-2">Lost something?<br><span class="hero-highlight">Let's bring it home.</span></h1>
+      <p class="lead mt-3 mb-4">A simple, trusted place for students to report lost belongings, discover found items, and help each other out.</p>
+      <a class="btn btn-warning btn-lg fw-semibold me-2" asp-controller="Reports" asp-action="Index">Browse items</a>
+      @if (User.Identity?.IsAuthenticated == true) { <a class="btn btn-outline-light btn-lg" asp-controller="Reports" asp-action="Create">Post a report</a> }
+      else { <a class="btn btn-outline-light btn-lg" asp-controller="Account" asp-action="Register">Join CampusConnect</a> }
+    </div>
+    <div class="col-lg-4 d-none d-lg-block"><div class="hero-art"><div class="floating-card">🔑 <span>Keys found</span><b>Library block</b></div><div class="floating-card second">🎧 <span>Earbuds lost</span><b>Sports complex</b></div><div class="hero-circle">CC</div></div></div>
+  </div>
+</section>
+<div class="row g-3 mb-5">
+  <div class="col-md-4"><div class="stat-card"><div class="stat-icon">📋</div><div><div class="stat-number">@ViewBag.TotalReports</div><div class="text-secondary">Total reports</div></div></div></div>
+  <div class="col-md-4"><div class="stat-card"><div class="stat-icon">🔎</div><div><div class="stat-number">@ViewBag.LostCount</div><div class="text-secondary">Lost items</div></div></div></div>
+  <div class="col-md-4"><div class="stat-card"><div class="stat-icon">🤝</div><div><div class="stat-number">@ViewBag.FoundCount</div><div class="text-secondary">Found items</div></div></div></div>
+</div>
+<div class="d-flex justify-content-between align-items-end mb-3"><div><span class="eyebrow text-primary">COMMUNITY BOARD</span><h2 class="h3 fw-bold mt-1">Recently reported</h2></div><a asp-controller="Reports" asp-action="Index" class="link-primary fw-semibold">View all →</a></div>
+<div class="row g-3">
+@foreach (var item in Model) {
+  <div class="col-md-6 col-lg-4"><div class="item-card h-100">
+    <div class="d-flex justify-content-between align-items-start"><span class="badge @(item.ReportType == ReportType.Lost ? "text-bg-danger" : "text-bg-success")">@item.ReportType</span><span class="status-pill">@item.Status</span></div>
+    <h3 class="h5 mt-3 fw-bold">@item.Title</h3><p class="text-secondary small clamp-2">@item.Description</p>
+    <div class="item-meta">📍 @item.Location</div><div class="item-meta">📅 @item.EventDate.ToString("dd MMM yyyy")</div>
+    <a class="btn btn-outline-primary w-100 mt-3" asp-controller="Reports" asp-action="Details" asp-route-id="@item.Id">View details</a>
+  </div></div>
+}
+@if (!Model.Any()) { <div class="col-12"><div class="empty-state"><div class="display-6">✨</div><h3>Be the first to post</h3><p class="text-secondary">Your campus community starts with one report.</p><a asp-controller="Reports" asp-action="Create" class="btn btn-primary">Create a report</a></div></div> }
+</div>

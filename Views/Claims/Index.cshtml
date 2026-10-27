@@ -1,0 +1,7 @@
+@model IEnumerable<ClaimRequest>
+@{ ViewData["Title"] = "Manage Claims"; }
+<h1 class="h2 fw-bold">Claim review</h1><p class="text-secondary">Review claims carefully before approving a return.</p>
+<div class="table-responsive bg-white rounded-4 border"><table class="table align-middle mb-0"><thead class="table-light"><tr><th>Item</th><th>Claimant</th><th>Reason</th><th>Submitted</th><th>Status</th><th>Review</th></tr></thead><tbody>
+@foreach (var c in Model) { <tr><td><a asp-controller="Reports" asp-action="Details" asp-route-id="@c.ItemReportId">@c.ItemReport?.Title</a></td><td>@c.Claimant?.FullName</td><td class="claim-reason">@c.ClaimDescription</td><td>@c.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</td><td><span class="status-pill">@c.Status</span></td><td>@if (c.Status == ClaimStatus.Pending) { <form asp-action="Review" method="post" class="d-flex gap-1">@Html.AntiForgeryToken()<input type="hidden" name="id" value="@c.Id"/><button name="status" value="Approved" class="btn btn-sm btn-success">Approve</button><button name="status" value="Rejected" class="btn btn-sm btn-outline-danger">Reject</button></form> } else { <span class="text-secondary small">Reviewed</span> }</td></tr> }
+@if (!Model.Any()) { <tr><td colspan="6" class="text-center text-secondary py-4">No claims submitted yet.</td></tr> }
+</tbody></table></div>

@@ -1,0 +1,13 @@
+@model ItemReport
+@{ ViewData["Title"] = "Report Details"; }
+<a asp-action="Index" class="text-decoration-none">← All reports</a>
+<div class="row g-4 mt-1"><div class="col-lg-8"><div class="detail-card">
+<div class="d-flex gap-2 mb-3"><span class="badge @(Model.ReportType == ReportType.Lost ? "text-bg-danger" : "text-bg-success")">@Model.ReportType item</span><span class="status-pill">@Model.Status</span></div>
+<h1 class="h2 fw-bold">@Model.Title</h1><p class="text-secondary">Posted by @(Model.User?.FullName ?? "Campus member") · @Model.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</p><hr/>
+<h2 class="h6 fw-bold">Description</h2><p class="description-text">@Model.Description</p>
+<div class="row g-3 mt-2"><div class="col-sm-6"><div class="detail-fact"><span>Category</span><b>@Model.Category</b></div></div><div class="col-sm-6"><div class="detail-fact"><span>Location</span><b>@Model.Location</b></div></div><div class="col-sm-6"><div class="detail-fact"><span>Date lost/found</span><b>@Model.EventDate.ToString("dd MMM yyyy")</b></div></div><div class="col-sm-6"><div class="detail-fact"><span>Current status</span><b>@Model.Status</b></div></div></div>
+<div class="d-flex flex-wrap gap-2 mt-4">
+@if (User.Identity?.IsAuthenticated == true && (User.IsInRole("Admin") || User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value == Model.UserId)) { <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edit report</a><a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">Delete</a> }
+@if (User.Identity?.IsAuthenticated == true && Model.UserId != User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value && Model.Status != ItemStatus.Returned) { <a asp-controller="Claims" asp-action="Create" asp-route-itemReportId="@Model.Id" class="btn btn-warning fw-semibold">Submit a claim</a> }
+</div></div></div>
+<div class="col-lg-4"><div class="help-card"><div class="fs-2">🤝</div><h2 class="h5 fw-bold mt-2">Think this is yours?</h2><p class="text-secondary small">Submit a claim with details only the rightful owner would know. An administrator will review it before the item is marked returned.</p></div><div class="alert alert-light border small mt-3">Safety tip: meet in a public campus location and never share passwords or OTPs to prove ownership.</div></div></div>

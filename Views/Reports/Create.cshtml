@@ -1,0 +1,5 @@
+@model ItemReport
+@{ ViewData["Title"] = "Create Report"; }
+<div class="form-shell"><a asp-action="Index" class="text-decoration-none">← Back to listings</a><h1 class="h2 fw-bold mt-3">Report a lost or found item</h1><p class="text-secondary mb-4">The more helpful detail you provide, the easier it is for someone to recognize the item.</p>
+<form asp-action="Create" method="post">@Html.AntiForgeryToken()<partial name="_ReportForm" model="Model" /><div class="d-flex gap-2 mt-4"><button class="btn btn-primary btn-lg">Submit report</button><a asp-action="Index" class="btn btn-outline-secondary btn-lg">Cancel</a></div></form></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
